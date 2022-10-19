@@ -1,0 +1,39 @@
+﻿  main.cpp
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(30,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(57,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(61,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(89,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(121,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(129,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(152,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(160,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(184,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(192,17): warning C4244: инициализация: преобразование "_Rep" в "double", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(227,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(295,9): warning C4101: result_time_usual_arr: неиспользованная локальная переменная
+C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\main.cpp(295,35): warning C4101: result_time_threads_arr: неиспользованная локальная переменная
+  lab_5.vcxproj -> C:\Users\siraz\Desktop\bmstu\3_course\AA\lab_5\lab_5\Debug\lab_5.exe

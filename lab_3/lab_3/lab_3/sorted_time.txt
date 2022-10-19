@@ -1,0 +1,16 @@
+for len : 200
+    bubble method time is 0.000007812500000
+    insert method time is 0.000001562500000
+    choice method time is 0.000008012500000
+for len : 500
+    bubble method time is 0.000070312500000
+    insert method time is 0.000007812500000
+    choice method time is 0.000072125000000
+for len : 1000
+    bubble method time is 0.000218750000000
+    insert method time is 0.000093750000000
+    choice method time is 0.000320312500000
+for len : 5000
+    bubble method time is 0.005515625000000
+    insert method time is 0.002867187500000
+    choice method time is 0.008046875000000

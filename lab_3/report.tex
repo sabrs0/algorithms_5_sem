@@ -1,0 +1,933 @@
+\documentclass[14pt,russian]{scrartcl}
+\let\counterwithout\relax
+\let\counterwithin\relax
+\usepackage{lmodern}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{extsizes}
+\usepackage{subfig}
+\usepackage[export]{adjustbox}
+\usepackage{tocvsec2} % возможность менять учитываемую глубину разделов в оглавлении
+\usepackage[subfigure]{tocloft}
+
+\usepackage{fancyvrb}
+\usepackage{ulem,bm,mathrsfs,ifsym} %зачеркивания, особо жирный стиль и RSFS начертание
+\usepackage{sectsty} % переопределение стилей подразделов
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Поля и разметка страницы %%%
+\usepackage{pdflscape}                              % Для включения альбомных страниц
+\usepackage{geometry}                               % Для последующего задания полей
+\geometry{a4paper,tmargin=2cm,bmargin=2cm,lmargin=3cm,rmargin=1cm} % тоже самое, но лучше
+
+%%% Математические пакеты %%%
+\usepackage{amsthm,amsfonts,amsmath,amssymb,amscd}  % Математические дополнения от AMS
+\usepackage{mathtools}                              % Добавляет окружение multlined
+\usepackage[perpage]{footmisc}
+
+%%%% Установки для размера шрифта 14 pt %%%%
+%% Формирование переменных и констант для сравнения (один раз для всех подключаемых файлов)%%
+%% должно располагаться до вызова пакета fontspec или polyglossia, потому что они сбивают его работу
+%\newlength{\curtextsize}
+%\newlength{\bigtextsize}
+%\setlength{\bigtextsize}{13pt}
+\KOMAoptions{fontsize=14pt}
+
+\makeatletter
+\def\showfontsize{\f@size{} point}
+\makeatother
+
+%\makeatletter
+%\show\f@size                                       % неплохо для отслеживания, но вызывает стопорение процесса, если документ компилируется без команды  -interaction=nonstopmode 
+%\setlength{\curtextsize}{\f@size pt}
+%\makeatother
+
+%шрифт times
+\usepackage{tempora}
+
+   %%% Решение проблемы копирования текста в буфер кракозябрами
+%    \input glyphtounicode.tex
+%    \input glyphtounicode-cmr.tex %from pdfx package
+%    \pdfgentounicode=1
+    \usepackage{cmap}                               % Улучшенный поиск русских слов в полученном pdf-файле
+    \usepackage[T2A]{fontenc}                       % Поддержка русских букв
+    \usepackage[utf8]{inputenc}                     % Кодировка utf8
+    \usepackage[english, main=russian]{babel}            % Языки: русский, английский
+%   \IfFileExists{pscyr.sty}{\usepackage{pscyr}}{}  % Красивые русские шрифты
+%\renewcommand{\rmdefault}{ftm}
+%%% Оформление абзацев %%%
+\usepackage{indentfirst}                            % Красная строка
+%\usepackage{eskdpz}
+
+%%% Таблицы %%%
+\usepackage{longtable}                              % Длинные таблицы
+\usepackage{multirow,makecell,array}                % Улучшенное форматирование таблиц
+\usepackage{booktabs}                               % Возможность оформления таблиц в классическом книжном стиле (при правильном использовании не противоречит ГОСТ)
+
+%%% Общее форматирование
+\usepackage{soulutf8}                               % Поддержка переносоустойчивых подчёркиваний и зачёркиваний
+\usepackage{icomma}                                 % Запятая в десятичных дробях
+
+
+
+%%% Изображения %%%
+\usepackage{graphicx}                               % Подключаем пакет работы с графикой
+\usepackage{wrapfig}
+
+%%% Списки %%%
+\usepackage{enumitem}
+
+%%% Подписи %%%
+\usepackage{caption}                                % Для управления подписями (рисунков и таблиц) % Может управлять номерами рисунков и таблиц с caption %Иногда может управлять заголовками в списках рисунков и таблиц
+%% Использование:
+%\begin{table}[h!]\ContinuedFloat - чтобы не переключать счетчик
+%\captionsetup{labelformat=continued}% должен стоять до самого caption
+%\caption{}
+% либо ручками \caption*{Продолжение таблицы~\ref{...}.} :)
+
+%%% Интервалы %%%
+
+%%% Счётчики %%%
+\usepackage[figure,table,section]{totalcount}               % Счётчик рисунков и таблиц
+\DeclareTotalCounter{lstlisting}
+\usepackage{totcount}                               % Пакет создания счётчиков на основе последнего номера подсчитываемого элемента (может требовать дважды компилировать документ)
+\usepackage{totpages}                               % Счётчик страниц, совместимый с hyperref (ссылается на номер последней страницы). Желательно ставить последним пакетом в преамбуле
+
+%%% Продвинутое управление групповыми ссылками (пока только формулами) %%%
+%% Кодировки и шрифты %%%
+
+%   \newfontfamily{\cyrillicfont}{Times New Roman}
+%   \newfontfamily{\cyrillicfonttt}{CMU Typewriter Text}
+	%\setmainfont{Times New Roman}
+	%\newfontfamily\cyrillicfont{Times New Roman}
+	%\setsansfont{Times New Roman}                    %% задаёт шрифт без засечек
+%	\setmonofont{Liberation Mono}               %% задаёт моноширинный шрифт
+ %   \IfFileExists{pscyr.sty}{\renewcommand{\rmdefault}{ftm}}{}
+%%% Интервалы %%%
+%linespread-реализация ближе к реализации полуторного интервала в ворде.
+%setspace реализация заточена под шрифты 10, 11, 12pt, под остальные кегли хуже, но всё же ближе к типографской классике. 
+\linespread{1.3}                    % Полуторный интервал (ГОСТ Р 7.0.11-2011, 5.3.6)
+%\renewcommand{\@biblabel}[1]{#1}
+
+%%% Гиперссылки %%%
+\usepackage{hyperref}
+
+%%% Выравнивание и переносы %%%
+\sloppy                             % Избавляемся от переполнений
+\clubpenalty=10000                  % Запрещаем разрыв страницы после первой строки абзаца
+\widowpenalty=10000                 % Запрещаем разрыв страницы после последней строки абзаца
+
+\makeatletter % малые заглавные, small caps shape
+\let\@@scshape=\scshape
+\renewcommand{\scshape}{%
+  \ifnum\strcmp{\f@series}{bx}=\z@
+    \usefont{T1}{cmr}{bx}{sc}%
+  \else
+    \ifnum\strcmp{\f@shape}{it}=\z@
+      \fontshape{scsl}\selectfont
+    \else
+      \@@scshape
+    \fi
+  \fi}
+\makeatother
+
+%%% Подписи %%%
+%\captionsetup{%
+%singlelinecheck=off,                % Многострочные подписи, например у таблиц
+%skip=2pt,                           % Вертикальная отбивка между подписью и содержимым рисунка или таблицы определяется ключом
+%justification=centering,            % Центрирование подписей, заданных командой \caption
+%}
+%%%        Подключение пакетов                 %%%
+\usepackage{ifthen}                 % добавляет ifthenelse
+%%% Инициализирование переменных, не трогать!  %%%
+\newcounter{intvl}
+\newcounter{otstup}
+\newcounter{contnumeq}
+\newcounter{contnumfig}
+\newcounter{contnumtab}
+\newcounter{pgnum}
+\newcounter{bibliosel}
+\newcounter{chapstyle}
+\newcounter{headingdelim}
+\newcounter{headingalign}
+\newcounter{headingsize}
+\newcounter{tabcap}
+\newcounter{tablaba}
+\newcounter{tabtita}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Область упрощённого управления оформлением %%%
+
+%% Интервал между заголовками и между заголовком и текстом
+% Заголовки отделяют от текста сверху и снизу тремя интервалами (ГОСТ Р 7.0.11-2011, 5.3.5)
+\setcounter{intvl}{3}               % Коэффициент кратности к размеру шрифта
+
+%% Отступы у заголовков в тексте
+\setcounter{otstup}{0}              % 0 --- без отступа; 1 --- абзацный отступ
+
+%% Нумерация формул, таблиц и рисунков
+\setcounter{contnumeq}{1}           % Нумерация формул: 0 --- пораздельно (во введении подряд, без номера раздела); 1 --- сквозная нумерация по всей диссертации
+\setcounter{contnumfig}{1}          % Нумерация рисунков: 0 --- пораздельно (во введении подряд, без номера раздела); 1 --- сквозная нумерация по всей диссертации
+\setcounter{contnumtab}{1}          % Нумерация таблиц: 0 --- пораздельно (во введении подряд, без номера раздела); 1 --- сквозная нумерация по всей диссертации
+
+%% Оглавление
+\setcounter{pgnum}{0}               % 0 --- номера страниц никак не обозначены; 1 --- Стр. над номерами страниц (дважды компилировать после изменения)
+
+%% Библиография
+\setcounter{bibliosel}{1}           % 0 --- встроенная реализация с загрузкой файла через движок bibtex8; 1 --- реализация пакетом biblatex через движок biber
+
+%% Текст и форматирование заголовков
+\setcounter{chapstyle}{1}           % 0 --- разделы только под номером; 1 --- разделы с названием "Глава" перед номером
+\setcounter{headingdelim}{1}        % 0 --- номер отделен пропуском в 1em или \quad; 1 --- номера разделов и приложений отделены точкой с пробелом, подразделы пропуском без точки; 2 --- номера разделов, подразделов и приложений отделены точкой с пробелом.
+
+%% Выравнивание заголовков в тексте
+\setcounter{headingalign}{0}        % 0 --- по центру; 1 --- по левому краю
+
+%% Размеры заголовков в тексте
+\setcounter{headingsize}{0}         % 0 --- по ГОСТ, все всегда 14 пт; 1 --- пропорционально изменяющийся размер в зависимости от базового шрифта
+
+%% Подпись таблиц
+\setcounter{tabcap}{0}              % 0 --- по ГОСТ, номер таблицы и название разделены тире, выровнены по левому краю, при необходимости на нескольких строках; 1 --- подпись таблицы не по ГОСТ, на двух и более строках, дальнейшие настройки: 
+%Выравнивание первой строки, с подписью и номером
+\setcounter{tablaba}{2}             % 0 --- по левому краю; 1 --- по центру; 2 --- по правому краю
+%Выравнивание строк с самим названием таблицы
+\setcounter{tabtita}{1}             % 0 --- по левому краю; 1 --- по центру; 2 --- по правому краю
+
+%%% Рисунки %%%
+\DeclareCaptionLabelSeparator*{emdash}{~--- }             % (ГОСТ 2.105, 4.3.1)
+\captionsetup[figure]{labelsep=emdash,font=onehalfspacing,position=bottom}
+
+%%% Таблицы %%%
+\ifthenelse{\equal{\thetabcap}{0}}{%
+    \newcommand{\tabcapalign}{\raggedright}  % по левому краю страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetablaba}{0} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabcapalign}{\raggedright}  % по левому краю страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetablaba}{1} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabcapalign}{\centering}    % по центру страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetablaba}{2} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabcapalign}{\raggedleft}   % по правому краю страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetabtita}{0} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabtitalign}{\raggedright}  % по левому краю страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetabtita}{1} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabtitalign}{\centering}    % по центру страницы или аналога parbox
+}
+
+\ifthenelse{\equal{\thetabtita}{2} \AND \equal{\thetabcap}{1}}{%
+    \newcommand{\tabtitalign}{\raggedleft}   % по правому краю страницы или аналога parbox
+}
+
+\DeclareCaptionFormat{tablenocaption}{\tabcapalign #1\strut}        % Наименование таблицы отсутствует
+\ifthenelse{\equal{\thetabcap}{0}}{%
+    \DeclareCaptionFormat{tablecaption}{\tabcapalign #1#2#3}
+    \captionsetup[table]{labelsep=emdash}                       % тире как разделитель идентификатора с номером от наименования
+}{%
+    \DeclareCaptionFormat{tablecaption}{\tabcapalign #1#2\par%  % Идентификатор таблицы на отдельной строке
+        \tabtitalign{#3}}                                       % Наименование таблицы строкой ниже
+    \captionsetup[table]{labelsep=space}                        % пробельный разделитель идентификатора с номером от наименования
+}
+\captionsetup[table]{format=tablecaption,singlelinecheck=off,font=onehalfspacing,position=top,skip=-5pt}  % многострочные наименования и прочее
+\DeclareCaptionLabelFormat{continued}{Продолжение таблицы~#2}
+\setlength{\belowcaptionskip}{.2cm}
+\setlength{\intextsep}{0ex}
+
+%%% Подписи подрисунков %%%
+\renewcommand{\thesubfigure}{\asbuk{subfigure}}           % Буквенные номера подрисунков
+\captionsetup[subfigure]{font={normalsize},               % Шрифт подписи названий подрисунков (не отличается от основного)
+    labelformat=brace,                                    % Формат обозначения подрисунка
+    justification=centering,                              % Выключка подписей (форматирование), один из вариантов            
+}
+%\DeclareCaptionFont{font12pt}{\fontsize{12pt}{13pt}\selectfont} % объявляем шрифт 12pt для использования в подписях, тут же надо интерлиньяж объявлять, если не наследуется
+%\captionsetup[subfigure]{font={font12pt}}                 % Шрифт подписи названий подрисунков (всегда 12pt)
+
+%%% Настройки гиперссылок %%%
+
+\definecolor{linkcolor}{rgb}{0.0,0,0}
+\definecolor{citecolor}{rgb}{0,0.0,0}
+\definecolor{urlcolor}{rgb}{0,0,0}
+
+\hypersetup{
+    linktocpage=true,           % ссылки с номера страницы в оглавлении, списке таблиц и списке рисунков
+%    linktoc=all,                % both the section and page part are links
+%    pdfpagelabels=false,        % set PDF page labels (true|false)
+    plainpages=true,           % Forces page anchors to be named by the Arabic form  of the page number, rather than the formatted form
+    colorlinks,                 % ссылки отображаются раскрашенным текстом, а не раскрашенным прямоугольником, вокруг текста
+    linkcolor={linkcolor},      % цвет ссылок типа ref, eqref и подобных
+    citecolor={citecolor},      % цвет ссылок-цитат
+    urlcolor={urlcolor},        % цвет гиперссылок
+    pdflang={ru},
+}
+\urlstyle{same}
+%%% Шаблон %%%
+%\DeclareRobustCommand{\todo}{\textcolor{red}}       % решаем проблему превращения названия цвета в результате \MakeUppercase, http://tex.stackexchange.com/a/187930/79756 , \DeclareRobustCommand protects \todo from expanding inside \MakeUppercase
+\setlength{\parindent}{2.5em}                       % Абзацный отступ. Должен быть одинаковым по всему тексту и равен пяти знакам (ГОСТ Р 7.0.11-2011, 5.3.7).
+
+%%% Списки %%%
+% Используем дефис для ненумерованных списков (ГОСТ 2.105-95, 4.1.7)
+%\renewcommand{\labelitemi}{\normalfont\bfseries~{---}} 
+\renewcommand{\labelitemi}{\bfseries~{---}} 
+\setlist{nosep,%                                    % Единый стиль для всех списков (пакет enumitem), без дополнительных интервалов.
+    labelindent=\parindent,leftmargin=*%            % Каждый пункт, подпункт и перечисление записывают с абзацного отступа (ГОСТ 2.105-95, 4.1.8)
+}
+%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{xltxtra} % load xunicode
+
+\usepackage{ragged2e}
+\usepackage[explicit]{titlesec}
+\usepackage{placeins}
+\usepackage{xparse}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+
+\usepackage{listingsutf8}
+\usepackage{url} %пакеты расширений
+\usepackage{algorithm, algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{blkarray}
+\usepackage{chngcntr}
+\usepackage{tabularx}
+\newcommand*\template[1]{\text{<}#1\text{>}}
+
+  
+\titleformat{name=\section,numberless}[block]{\normalfont\Large\centering}{}{0em}{#1}
+\titleformat{\section}[block]{\normalfont\Large\bfseries\raggedright}{}{0em}{\thesection\hspace{0.25em}#1}
+\titleformat{\subsection}[block]{\normalfont\Large\bfseries\raggedright}{}{0em}{\thesubsection\hspace{0.25em}#1}
+\titleformat{\subsubsection}[block]{\normalfont\large\bfseries\raggedright}{}{0em}{\thesubsubsection\hspace{0.25em}#1}
+
+\let\Algorithm\algorithm
+\renewcommand\algorithm[1][]{\Algorithm[#1]\setstretch{1.5}}
+
+\usepackage{pifont}
+\usepackage{calc}
+\usepackage{suffix}
+\usepackage{csquotes}
+\DeclareQuoteStyle{russian}
+    {\guillemotleft}{\guillemotright}[0.025em]
+    {\quotedblbase}{\textquotedblleft}
+\ExecuteQuoteOptions{style=russian}
+\newcommand{\enq}[1]{\enquote{#1}}  
+\newcommand{\eng}[1]{\begin{english}#1\end{english}}
+% Подчиненные счетчики в окружениях http://old.kpfu.ru/journals/izv_vuz/arch/sample1251.tex
+\newcounter{cTheorem} 
+\newcounter{cDefinition}
+\newcounter{cConsequent}
+\newcounter{cExample}
+\newcounter{cLemma}
+\newcounter{cConjecture}
+\newtheorem{Theorem}{Теорема}[cTheorem]
+\newtheorem{Definition}{Определение}[cDefinition]
+\newtheorem{Consequent}{Следствие}[cConsequent]
+\newtheorem{Example}{Пример}[cExample]
+\newtheorem{Lemma}{Лемма}[cLemma]
+\newtheorem{Conjecture}{Гипотеза}[cConjecture]
+
+\renewcommand{\theTheorem}{\arabic{Theorem}}
+\renewcommand{\theDefinition}{\arabic{Definition}}
+\renewcommand{\theConsequent}{\arabic{Consequent}}
+\renewcommand{\theExample}{\arabic{Example}}
+\renewcommand{\theLemma}{\arabic{Lemma}}
+\renewcommand{\theConjecture}{\arabic{Conjecture}}
+%\makeatletter
+\NewDocumentCommand{\Newline}{}{\text{\\}}
+\newcommand{\sequence}[2]{\ensuremath \left(#1,\ \dots,\ #2\right)}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\renewcommand{\listalgorithmname}{Список алгоритмов}
+\floatname{algorithm}{Листинг}
+\renewcommand{\lstlistingname}{Листинг}
+\renewcommand{\thealgorithm}{\arabic{algorithm}}
+
+\newcommand{\refAlgo}[1]{(листинг \ref{#1})}
+\newcommand{\refImage}[1]{(рисунок \ref{#1})}
+
+\renewcommand{\theenumi}{\arabic{enumi}.}% Меняем везде перечисления на цифра.цифра	
+\renewcommand{\labelenumi}{\arabic{enumi}.}% Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumii}{\arabic{enumii}}% Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumii}{(\arabic{enumii})}% Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumiii}{\roman{enumiii}}% Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumiii}{(\roman{enumiii})}% Меняем везде перечисления на цифра.цифра
+%\newfontfamily\AnkaCoder[Path=src/fonts/]{AnkaCoder-r.ttf}
+\renewcommand{\labelitemi}{---}
+\renewcommand{\labelitemii}{---}
+
+%\usepackage{courier}
+
+\graphicspath{ {./img/} }
+
+\lstdefinelanguage{Refal}{
+  alsodigit = {.,<,>},
+  morekeywords = [1]{$ENTRY},
+  morekeywords = [2]{Go, Put, Get, Open, Close, Arg, Add, Sub, Mul, Div, Symb, Explode, Implode},
+  %keyword4
+  morekeywords = [3]{<,>},
+  %keyword5
+  morekeywords = [4]{e.,t.,s.},
+  sensitive = true,
+  morecomment = [l]{*},
+  morecomment = [s]{/*}{*/},
+  commentstyle = \color{mygreen},
+  morestring = [b]",
+  morestring = [b]',
+  stringstyle = \color{purple}
+}
+
+\makeatletter
+\def\p@subsection{}
+\def\p@subsubsection{\thesection\,\thesubsection\,}
+\makeatother
+\newcommand{\prog}[1]{{\ttfamily\small#1}}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\ttfamily\footnotesize, 
+  %basicstyle=\footnotesize\AnkaCoder,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks shoulbd only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=top,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  inputencoding=utf8,
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\bf,       % keyword style
+  language=Refal,                    % the language of the code
+  morekeywords={<,>,$ENTRY,Go,Arg, Open, Close, e., s., t., Get, Put}, 
+  							       % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  xleftmargin=25pt,
+  xrightmargin=25pt,
+  numberstyle=\small\color{black}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=8,                       % sets default tabsize to 8 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\newcommand{\anonsection}[1]{\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{\protect\numberline{}#1}
+\section*{#1}\vspace*{2.5ex} % По госту положены 3 пустые строки после заголовка ненумеруемого раздела
+}
+\newcommand{\sectionbreak}{\clearpage}
+\renewcommand{\sectionfont}{\normalsize} % Сбиваем стиль оглавления в стандартный
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Точки в оглавлении напротив разделов
+
+\renewcommand{\cftsecfont}{\normalfont\large} % Переключение на times в содержании
+\renewcommand{\cftsubsecfont}{\normalfont\large} % Переключение на times в содержании
+
+\usepackage{caption} 
+%\captionsetup[table]{justification=raggedleft} 
+%\captionsetup[figure]{justification=centering,labelsep=endash}
+\usepackage{amsmath}    % \bar    (матрицы и проч. ...)
+\usepackage{amsfonts}   % \mathbb (символ для множества действительных чисел и проч. ...)
+\usepackage{mathtools}  % \abs, \norm
+    \DeclarePairedDelimiter\abs{\lvert}{\rvert} % операция модуля
+    \DeclarePairedDelimiter\norm{\lVert}{\rVert} % операция нормы
+\DeclareTextCommandDefault{\textvisiblespace}{%
+  \mbox{\kern.06em\vrule \@height.3ex}%
+  \vbox{\hrule \@width.3em}%
+  \hbox{\vrule \@height.3ex}}    
+\newsavebox{\spacebox}
+\begin{lrbox}{\spacebox}
+\verb*! !
+\end{lrbox}
+\newcommand{\aspace}{\usebox{\spacebox}}
+
+\DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it} %Курсив кириллицы в формулах
+\usepackage{pgfplots} % графики
+
+\title{Lab 03 report}
+\author{Sergey}
+
+\date{\today}
+
+\begin{document}
+\thispagestyle{empty}
+
+\noindent \begin{minipage}{0.15\textwidth}
+	\includegraphics[width=\linewidth]{b_logo}
+\end{minipage}
+\noindent\begin{minipage}{0.85\textwidth}\centering
+	\textbf{Министерство науки и высшего образования Российской Федерации}\\
+	\textbf{Федеральное государственное бюджетное образовательное учреждение высшего образования}\\
+	\textbf{«Московский государственный технический университет имени Н.Э.~Баумана}\\
+	\textbf{(национальный исследовательский университет)»}\\
+	\textbf{(МГТУ им. Н.Э.~Баумана)}
+\end{minipage}
+
+\noindent\rule{16cm}{3pt}
+\newline\newline
+\noindent ФАКУЛЬТЕТ $\underline{\text{«Информатика и системы управления»}}$ \newline\newline
+\noindent КАФЕДРА $\underline{\text{«Программное обеспечение ЭВМ и информационные технологии»}}$\newline\newline
+
+
+\begin{center}
+	\noindent\begin{minipage}{1.3\textwidth}\centering
+	\Large\textbf{   ~~~ Лабораторная работа №3}\newline
+	\textbf{по дисциплине "Анализ Алгоритмов"}\newline\newline\newline
+	\end{minipage}
+\end{center}
+
+\noindent\textbf{Тема} $\underline{\text{Алгоритмы сортировки}}$\newline\newline
+\noindent\textbf{Студент} $\underline{\text{Сабуров  С. М.}}$\newline\newline
+\noindent\textbf{Группа} $\underline{\text{ИУ7-53Б}}$\newline\newline
+\noindent\textbf{Преподаватель} $\underline{\text{Волкова Л. Л.}}$\newline
+
+\begin{center}
+	\mbox{}
+	\vfill
+	Москва
+\end{center}
+
+\begin{center}
+	\the\year ~г.
+\end{center}
+\clearpage
+
+\renewcommand\contentsname{\hfill{\normalfont{СОДЕРЖАНИЕ}}\hfill}  %Оглавление
+\tableofcontents
+\newpage
+
+\anonsection{Введение}
+
+
+Целью данной лабораторной работы является изучить и реализовать алгоритмы сортировки, оценить их трудоемкость.
+
+Алгоритмы сортировки имеют широкое практическое применение. Сортировки используются в большом спектре задач, включая обработку коммерческих, сейсмических, космических данных. Часто сортировка является просто вспомогательной операцией для упорядочивания данных, упрощения последующих алгебраических действий над данными.
+
+
+Сортировка применяется во многих областях программирования, например, базы данных или математические программы. Упорядоченные объекты содержатся в телефонных книгах, ведомостях налогов, в библиотеках, в оглавлениях, в словарях.
+
+Во многих вычислительных системах на сортировку уходит больше половины машинного времени. Исходя из этого, можно заключить, что либо сортировка имеет много важных применений, либо ею часто пользуются без нужды, либо применяются в основном неэффективные алгоритмы сортировки.
+
+В настоящее время, в связи с экспоненциально возросшими объемами данных, вопрос эффективной сортировки данных снова стал актуальным. В настоящее время в сети Интернет можно найти результаты производительности алгоритмов сортировки для ряда ведущих центров данных.
+При этом используются различные критерии оценки эффективности. 
+
+Для достижения поставленной цели необходимо выполнить следующие задачи:
+
+\begin{enumerate}
+    \item Рассмотреть и изучить сортировки пузырьком, вставками и выбором.
+    \item Реализовать каждую из этих сортировок.
+    \item Расчитать их трудоемкость.
+    \item Сравнить их временные характеристики экспериментально.
+    \item На основании проделанной работы сделать выводы.
+\end{enumerate}
+
+\section{Аналитическая часть}
+В данной главе будут рассмотрены алгоритмы сортировки.
+
+\subsection{Сортировка пузырьком}
+
+
+Алгоритм состоит из повторяющихся проходов по сортируемому массиву. За каждый проход элементы последовательно сравниваются попарно и, если порядок в паре неверный (возрастание, в случае сортировки по убыванию, и наоборот), выполняется обмен элементов. Проходы по массиву повторяются $N - 1$ раз, но есть модифицированная версия, где если окажется, что обмены больше не нужны, значит проходы прекращаются. При каждом проходе алгоритма по внутреннему циклу очередной наибольший элемент массива ставится на свое место в конце массива рядом с предыдущим «наибольшим элементом», а наименьший элемент массива перемещается на одну позицию к началу массива.
+
+\subsection{Сортировка вставками}
+
+Сортировка вставками — алгоритм сортировки, в котором элементы входной последовательности просматриваются по одному, и каждый новый поступивший элемент размещается в подходящее место среди ранее упорядоченных элементов.
+
+
+В начальный момент отсортированная последовательность пуста. На каждом шаге алгоритма выбирается один из элементов входных данных и помещается на нужную позицию в уже отсортированной последовательности до тех пор, пока набор входных данных не будет исчерпан. В любой момент времени в отсортированной последовательности элементы удовлетворяют требованиям к выходным данным алгоритма.
+
+\subsection{Сортировка выбором}
+
+Шаги алгоритмы:
+
+\begin{enumerate}
+    \item Находится номер минимального значения в текущем списке.
+    \item Производится обмен этого значения со значением первой неотсортированной позиции (обмен не нужен, если минимальный элемент уже находится на данной позиции).
+    \item Сортируется хвост списка, исключиая при этом из рассмотрения уже отсортированные элементы.
+\end{enumerate}
+
+Для реализации устойчивости алгоритма необходимо в пункте 2. минимальный элемент непосредственно вставлять в первую неотсортированную позицию, не меняя порядок остальных элементов.
+
+\subsection*{Вывод}
+
+В данной работе стоит задача реализации 3 алгоритмов сортировки, а именно: пузырьком, вставками и выбором. Необходимо оценить трудоем- кость алгоритмов и проверить ее экспериментально.
+\begin{itemize}
+	\item Входные данные : размер массива, массив . 
+	\item Выходные данные : Отсортированный массив.
+	\item Ограничения, в рамках которых будет работать программа : размер массива должен быть целым положительным числом, элементы массива должен быть также числами(допустим вещественный тип).
+	\item Функциональные требования : функции, представленные на листингах 2 - 4 должны сортировать массив в порядке возрастания.
+	\item Требования к программному обеспечению : к программе предъявляется ряд требований:
+			\begin{itemize}
+			    \item на вход подаются размер массива (натуральное число) и сам массив, который нужно отсортировать;
+			    \item на выходе - отсортированный массив.
+			\end{itemize}
+\end{itemize}
+
+\section{Конструкторская часть}
+
+В данном разделе будут представлены схемы алгоритмов и рассчитана их трудоемкость.
+
+\subsection{Трудоемкость алгоритмов}
+
+\subsubsection{Модель вычислений}
+
+Для последующего вычисления трудоемкости необходимо ввести модель вычислений.
+
+\begin{enumerate}
+    \item $+, -, /, \%, =, \neq, <, >, \leq, \geq, [ ], *, ++$ ~---~ трудоемкость 1.
+    \item Трудоемкость оператора выбора \textit{if} условие \textit{then A else B} рассчитывается, как: 
+    
+    \begin{equation}
+        f_{if} = f_{\text{условия}} + \begin{cases}
+                                f_A & \quad \text{если условие выполняется,} \\
+                                f_B & \quad \text{иначе}.
+                                \end{cases}
+    \end{equation}
+
+    \item Трудоемкость цикла расчитывается, как:
+    \begin{equation}
+        f_{for} = f_{\text{инициализации}} + f_{\text{сравнения}} + N(f_{\text{тела}} + f_{\text{инициализации}} + f_{\text{сравнения}}).
+    \end{equation}
+
+    \item Трудоемкость вызова функции равна 0.
+\end{enumerate}
+
+\subsection{Расчет трудоемкости}
+
+\subsubsection{Вычисление трудоёмкости алгоритма сортировки пузырьком}
+
+\textbf{Лучший случай}: массив отсортирован, следовательно не произошло ни одного обмена.
+
+Трудоемкость:
+
+\begin{equation}
+    T(N) = 2 + \frac{N \cdot (N - 1)}{2}\cdot 3 = 1.5N^2 - 1.5N + 2
+\end{equation}
+
+\textbf{Худший случай}: массив отсортирован в обратном порядке, в каждом случае происходил обмен.
+
+Трудоемкость:
+
+\begin{equation}
+    T(N) = 2 + \frac{N \cdot (N - 1)}{2}\cdot 8 = 4N^2 - 4N + 2
+\end{equation}
+
+\subsubsection{Вычисление трудоёмкости алгоритма сортировки вставками}
+
+\textbf{Лучший случай}: массив отсортирован, все внутренние циклы состоят всего из одной итерации.
+
+Трудоемкость:
+
+\begin{equation}
+    T(N) = 2 + 6N
+\end{equation}
+
+\textbf{Худший случай}: массив отсортирован в обратном порядке. Каждый новый элемент сравнивается со всеми в отсортированной последовательности. Все внутренние циклы будут состоять из j итераций.
+
+Трудоемкость.
+
+\begin{equation}
+    T(N) = \frac{N \cdot (N - 1)}{2} \cdot 10 + N + 2 = 5N^2 - 4N + 2
+\end{equation}
+
+\subsubsection{Вычисление трудоёмкости алгоритма сортировки выбором}
+
+\textbf{Лучший случай}: массив отсортирован.
+
+Трудоемкость:
+
+\begin{equation}
+    T(N) = 2 + \frac{N \cdot (N - 1)}{2} \cdot 8 + 4N = 4N^2 + 2
+\end{equation}
+
+\textbf{Худший случай}: массив отсортирован в обратном порядке, в каждом случае происходил обмен.
+
+Трудоемкость:
+
+\begin{equation}
+    T(N) = \frac{N \cdot (N - 1)}{2} \cdot 5 + 5 \cdot N + 3 = 2.5N^2 + 2.5N + 3
+\end{equation}
+\subsection{Описание структур данных}
+Был реализован класс Array, объединивший в себе алгоритмы работы с массивом и элементы массива.
+\begin{lstlisting}[caption=Описание класса Array, label=list:canon, language={}]
+template <typename T>
+class Array
+{
+private:
+	std::vector<T> array;
+public:
+	Array() = default;
+	Array(int N);
+	Array(std::initializer_list<T> list_);
+	Array(std::vector<T> list_);
+	Array(const Array& Arr);
+	~Array() = default;
+
+	void sort_insert();
+	void sort_bubble();
+	void sort_choice();
+	void output_array();
+	void fill_rand_arr();
+	void reverse_arr();
+};
+\end{lstlisting}
+
+\subsection{Способы тестирования и классы эквивалентности}
+Была выбрана методика тестирования черным ящиком. 
+Классы эквивалентности:
+\begin{itemize}
+	\item Отсортированный массив.
+	\item Массив, отсортированный в порядке убывания.
+	\item Массив, заполненный случайными числами.
+\end{itemize}
+
+\subsection{Схемы алгоритмов}
+
+На рисунках \ref{fig:bubble} - \ref{fig:selection} изображены схемы реализации алгоритма соритровки методом пузырька, методом вставок, методом выбора.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=1]{bubble.png}
+	\caption{Схема алгоритма сортировки пузырьком}
+	\label{fig:bubble}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=1]{insertion.png}
+	\caption{Схема алгоритма сортировки вставками}
+	\label{fig:insertion}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=1]{selection.png}
+	\caption{Схема алгоритма сортировки пузырьком}
+	\label{fig:selection}
+\end{figure}
+
+\subsection{Вывод}
+
+На основе теоретических данных, полученных из аналитического раздела, были построены схемы требуемых алгоритмов и проведена теоретическая оценка трудоемкости.
+
+\section{Технологическая часть}
+
+В данном разделе будет представлен выбор языка программирования и листинги реализаций алгоритмов.
+
+\subsection{Выбор языка программирования}
+Для реализации программ я выбрал язык программирования C++ [1]. Среда разработки Visual Studio 2019. Также данный язык был выбран потому, что в нем присутствует инструментарий для замера процессорного времени и тестирования.
+
+\subsection{Листинги реализации алгоритма}
+
+В листингах \ref{list:bubble} - \ref{list:selection} представлены реализации трех алгоритмов сортировки.
+
+\begin{lstlisting}[label=list:bubble, caption=Функция сортировки массива методом пузырька]
+template <typename T>
+void Array<T>::sort_bubble()
+{
+	
+	int l = this->array.size();
+	for (int i = 0; i < l - 1; i ++)
+	{
+		for (int j = i; j < l; j ++)
+		{
+			if (this->array[i] > this->array[j])
+			{
+				std::swap(this->array[i], this->array[j]);
+			 }
+		}
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=list:insertion, caption=Функция сортировки массива методом вставок]
+template <typename T>
+void Array<T>:: sort_insert()
+{
+	for (int i = 0; i < this->array.size() - 1; i++)
+	{
+		int key = i + 1;
+		T temp = this->array[key];
+		for (int j = i + 1; j > 0; j--)
+		{
+			if (temp < this->array[j - 1])
+			{
+				this->array[j] = this->array[j - 1];
+				key = j - 1;
+			}
+		}
+		this->array[key] = temp;
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=list:selection, caption=Функция сортировки массива методом выбора]
+template <typename T>
+void Array<T>::sort_choice()
+{
+	for (int startIndex = 0; startIndex < this->array.size() - 1; ++startIndex)
+	{
+		int smallestIndex = startIndex;
+		for (int currentIndex = startIndex + 1; currentIndex < this->array.size(); ++currentIndex)
+		{
+			if (this->array[currentIndex] < this->array[smallestIndex])
+				smallestIndex = currentIndex;
+		}
+		std::swap(this->array[startIndex], this->array[smallestIndex]);
+	}
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{Тестирование}
+
+Тестирование проводилось встроенной библиотекой модульного тестирования в систему сборки Cargo.
+
+В таблице \ref{tab:tests} приведены результаты тестирования.
+
+\begin{table}[h]
+    \caption{\centering Результаты функционального тестирования.}
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Вход       & Результат  & Ожидаемый результат \\ \hline
+    1, 2, 3, 4 & 1, 2, 3, 4 & 1, 2, 3, 4          \\ \hline
+    4, 3, 2, 1 & 1, 2, 3, 4 & 1, 2, 3, 4          \\ \hline
+    1, 3, 2, 4 & 1, 2, 3, 4 & 1, 2, 3, 4          \\ \hline
+    пустой     & пустой     & пустой              \\ \hline
+    \end{tabular}
+    \label{tab:tests}
+\end{table}
+
+
+\subsection*{Вывод}
+
+В данном разделе были представлены требования к программному обеспечению, выбор языка программирования, листинги реализаций алгоритмов и результаты тестирования.
+
+\section{Исследовательская часть}
+
+В данном разделе будут представлены замеры времени работы реализаций алгоритмов.
+
+\subsection{Сравнительный анализ на основе замеров времени работы алгоритмов}
+	
+Был проведен замер времени работы каждого из алгоритмов с помощью функции GetProcessTimes. Эта функция замеряет процессорное время выполнения функции и усредняет его.
+\clearpage
+    \begin{table}[htb]
+        \caption{\centering Результаты времени выполнения алгоритмов сортировок на отсортированном массиве (в секундах)}
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+        \hline
+        Размер массива & Пузырек  & Вставки  & Выбором  \\ \hline
+        200             & 0.0000078125 & 0.0000015625 & 0.0000080125 \\ \hline
+        500            & 0.0000703125 & 0.0000078125 & 0.000072125 \\ \hline
+        1000            & 0.00021875 & 0.00009375 & 0.0003203125\\ \hline
+        5000           & 0.005515625 & 0.0028671875 & 0.008046875 \\ \hline
+        \end{tabular}
+        \label{tab:sorted_bench}
+    \end{table}
+
+    \begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{sorted_full.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера отсортированного массива. Часть 1}
+    \label{img:sorted_arr_full}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{sorted_part.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера отсортированного массива. Часть 2}
+    \label{img:sorted_arr_part}
+\end{figure}
+
+    \begin{table}[htb]
+        \caption{\centering Результаты времени выполнения алгоритмов сортировок на отсортированном в обратном порядке массиве (в секундах)}
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+        \hline
+        Размер массива & Пузырек  & Вставки  & Выбором  \\ \hline
+        200             & 0.000015625 & 0.000015324 & 0.00000476 \\ \hline
+        500            & 0.00021875 & 0.00009375 & 0.000109375 \\ \hline
+        1000            & 0.000875 & 0.000359375 & 0.00034375 \\ \hline
+        5000           & 0.01996875 & 0.008453125 & 0.0081875 \\ \hline
+        \end{tabular}
+        \label{tab:unsorted_bench}
+    \end{table}
+
+   \begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{reversed_full.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера отсортированного в обратном порядке массива. Часть 1}
+    \label{img:reversed_arr_full}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{reversed_part.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера отсортированного в обратном порядке массива. Часть 2}
+    \label{img:reversed_arr_part}
+\end{figure}
+
+    \begin{table}[htb]
+        \caption{\centering Результаты времени выполнения алгоритмов сортировок на случайном массиве (в секундах)}
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+        \hline
+        Размер массива & Пузырек  & Вставки  & Выбором  \\ \hline
+        200             & 0.0000234375 & 0.000015625 & 0.000015625 \\ \hline
+        500            & 0.000140625 & 0.0000703125 & 0.0000859375 \\ \hline
+        1000            & 0.0005078125 & 0.00021875 & 0.000328125 \\ \hline
+        5000           & 0.0127578125 & 0.0055 & 0.0079140625 \\ \hline
+        \end{tabular}
+        \label{tab:rand_bench}
+    \end{table}
+
+    \begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{random_full.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера массива, заполненного случайным образом. Часть 1}
+    \label{img:random_arr_full}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{random_part.jpeg}
+    \caption{Зависимость времени выполнения алгоритмов от  размера массива, заполненного случайным образом. Часть 2}
+    \label{img:random_arr_part}
+\end{figure}
+
+    \subsection*{Вывод}
+
+    По результатам тестирования выявлено, что самым быстрым алгоритмом при использовании случайного массива оказался алгоритм сортировки методом вставок. Метод пузырька является самый медленным на случайном наборе данных.
+
+    \anonsection{Заключение}
+
+    В рамках данной лабораторной работы:
+
+    \begin{itemize}
+        \item были изучены и реализованы три алгоритма сортировки: методом пузырька, вставок и выбором;
+        \item был проведен сравнительный анализ трудоемкости алгоритмов на основе теоретических расчетов и выбранной модели вычислений;
+        \item был проведен сравнительный анализ алгоритмов на основе экспериментальных данных;
+    \end{itemize}
+
+    Экспериментально были установлены различия в производительности различных алгоритмов сортировки. Для массивов длины 5000, заполненной случайными данными, метод пузырька медленнее вставок и выбора.
+
+\anonsection{Список литература}
+
+	\begin{enumerate}
+
+		\item Т. Кормен, Ч. Лейзерсон, Р. Ривест, К. Штайн. Алгоритмы. Построение и анализ. Издательский дом ``Вильямс'', 2011. 173 - 240.
+		\item Б. Страуструп. Язык программирования С++ . Addison-Wesley, 2000. 142 - 145.
+		\item Г. Шилдт. С++. Полное руководство. СПб.: Наука и Техника, Издательский дом “Вильямс”, 2006. 621 - 670.
+		\item Я. Галовиц. С++17 STL. Стандартная библиотека шаблонов. Серийная библиотека программиста, 2018. 100 - 120.
+		\item Р. Седжвик. Фундаментальные алгоритмы С++. Diasoft, 2001. 52 - 59.
+
+	\end{enumerate}
+
+\end{document}
+\end{document}
